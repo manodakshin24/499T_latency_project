@@ -1,4 +1,8 @@
+CREATE USER anish;
+
 CREATE DATABASE socialnetwork;
+
+GRANT ALL ON DATABASE socialnetwork TO anish;
 
 CREATE TABLE socialnetwork.tmptable (userID INT PRIMARY KEY, serverID INT, name VARCHAR(255));
 
