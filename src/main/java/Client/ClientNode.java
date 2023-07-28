@@ -8,6 +8,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import java.util.ArrayList;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,21 +21,23 @@ public class ClientNode {
     private String username;
     private String password;
     private int messengerPort;
+    private ArrayList<Integer> messengerPorts;
     private int receiverPort;
     private Connection connection;
     private boolean isConnected = false;
     private ManagedChannel messenger;
+    private ArrayList<ManagedChannel> messengers = new ArrayList<ManagedChannel>();
     private Server receiver;
     private int id;
     private boolean receiverRunning = false;
 
-    public ClientNode(String url, String db, String driver, String username, String password, int messengerPort, int receiverPort, int id) {
+    public ClientNode(String url, String db, String driver, String username, String password, ArrayList<Integer> messengerPorts, int receiverPort, int id) {
         this.url = url;
         this.db = db;
         this.driver = driver;
         this.username = username;
         this.password = password;
-        this.messengerPort = messengerPort;
+        this.messengerPorts = messengerPorts;
         this.receiverPort = receiverPort;
         this.id = id;
     }
@@ -57,6 +60,18 @@ public class ClientNode {
         System.out.println("Client Node " + this.id + " started messenger");
     }
 
+    public void startMessengers() {
+        for (int i = 0; i < this.messengerPorts.size(); i++) {
+            this.messengers.add(
+                    ManagedChannelBuilder
+                            .forAddress("localhost", this.messengerPorts.get(i))
+                            .usePlaintext()
+                            .build()
+            );
+            System.out.println("Client Node " + this.id + " started messenger for port: " + this.messengerPorts.get(i));
+        }
+    }
+
     public void sendHelloMessenge() {
         //Create a synchronous client
         HelloServiceGrpc.HelloServiceBlockingStub syncClient = HelloServiceGrpc.newBlockingStub(this.messenger);
@@ -67,9 +82,29 @@ public class ClientNode {
         System.out.println(response.getResult());
     }
 
+    public void sendHelloMessages() {
+        //Create a synchronous client
+        HelloServiceGrpc.HelloServiceBlockingStub syncClient;
+        for (int i = 0; i < this.messengers.size(); i++) {
+            syncClient = HelloServiceGrpc.newBlockingStub(this.messengers.get(i));
+            //Create a protocol buffer message & send it
+            Hello hello = Hello.newBuilder().setClientID(this.id).build();
+            HelloRequest request = HelloRequest.newBuilder().setHello(hello).build();
+            HelloResponse response = syncClient.hello(request);
+            System.out.println(response.getResult());
+        }
+    }
+
     public void stopMessenger() {
         this.messenger.shutdown();
         System.out.println("Client Node " + this.id + " has shut down messenger");
+    }
+
+    public void stopMessengers() {
+        for (int i = 0; i < this.messengers.size(); i++) {
+            this.messengers.get(i).shutdown();
+        }
+        System.out.println("Client Node " + this.id + " has shut down all messengers");
     }
 
     public void startReceiver() throws IOException {

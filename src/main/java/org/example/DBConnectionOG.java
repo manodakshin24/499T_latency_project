@@ -3,19 +3,19 @@ package org.example;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class DBConnection {
+public class DBConnectionOG {
 
-    private static DBConnection dbInstance;
+    private static DBConnectionOG dbInstance;
     private static Connection con;
 
 
-    private DBConnection() {
+    private DBConnectionOG() {
         // private constructor //
     }
 
-    public static DBConnection getInstance() {
+    public static DBConnectionOG getInstance() {
         if (dbInstance == null) {
-            dbInstance = new DBConnection();
+            dbInstance = new DBConnectionOG();
         }
         return dbInstance;
     }
