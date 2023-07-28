@@ -20,12 +20,10 @@ public class ClientNode {
     private String driver;
     private String username;
     private String password;
-    private int messengerPort;
     private ArrayList<Integer> messengerPorts;
     private int receiverPort;
     private Connection connection;
     private boolean isConnected = false;
-    private ManagedChannel messenger;
     private ArrayList<ManagedChannel> messengers = new ArrayList<ManagedChannel>();
     private Server receiver;
     private int id;
@@ -52,14 +50,6 @@ public class ClientNode {
         }
     }
 
-    public void startMessenger() {
-        this.messenger = ManagedChannelBuilder
-                .forAddress("localhost", this.messengerPort)
-                .usePlaintext()
-                .build();
-        System.out.println("Client Node " + this.id + " started messenger");
-    }
-
     public void startMessengers() {
         for (int i = 0; i < this.messengerPorts.size(); i++) {
             this.messengers.add(
@@ -70,16 +60,6 @@ public class ClientNode {
             );
             System.out.println("Client Node " + this.id + " started messenger for port: " + this.messengerPorts.get(i));
         }
-    }
-
-    public void sendHelloMessenge() {
-        //Create a synchronous client
-        HelloServiceGrpc.HelloServiceBlockingStub syncClient = HelloServiceGrpc.newBlockingStub(this.messenger);
-        //Create a protocol buffer message & send it
-        Hello hello = Hello.newBuilder().setClientID(this.id).build();
-        HelloRequest request = HelloRequest.newBuilder().setHello(hello).build();
-        HelloResponse response = syncClient.hello(request);
-        System.out.println(response.getResult());
     }
 
     public void sendHelloMessages() {
@@ -93,11 +73,6 @@ public class ClientNode {
             HelloResponse response = syncClient.hello(request);
             System.out.println(response.getResult());
         }
-    }
-
-    public void stopMessenger() {
-        this.messenger.shutdown();
-        System.out.println("Client Node " + this.id + " has shut down messenger");
     }
 
     public void stopMessengers() {
