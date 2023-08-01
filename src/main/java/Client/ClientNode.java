@@ -4,6 +4,9 @@ import com.proto.hello.Hello;
 import com.proto.hello.HelloRequest;
 import com.proto.hello.HelloResponse;
 import com.proto.hello.HelloServiceGrpc;
+import com.proto.query.Query;
+import com.proto.query.QueryRequest;
+import com.proto.query.QueryServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
@@ -12,6 +15,12 @@ import java.util.ArrayList;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ClientNode {
 
@@ -85,6 +94,7 @@ public class ClientNode {
     public void startReceiver() throws IOException {
         this.receiver = ServerBuilder.forPort(this.receiverPort)
                 .addService(new ClientNodeReceiverImpl(this.id))
+                .addService(new ClientNodeQueryOneImpl(this.id, getDBConnection()))
                 .build();
         this.receiver.start();
         this.receiverRunning = true;
@@ -103,5 +113,43 @@ public class ClientNode {
         this.receiver.shutdown();
         this.receiverRunning = false;
         System.out.println("Client Node " + this.id + " stopped receiver");
+    }
+
+    public void executeQueryOne() {
+        int numOfNeighbors = this.messengers.size();
+
+        ArrayList<Thread> threads = new ArrayList<>();
+
+        Random random = new Random();
+
+        int randomNumber = random.nextInt(9001) + 1000;
+
+        for (int i = 0; i < numOfNeighbors + 1; i++) {
+
+            randomNumber = random.nextInt(9001) + 1000;
+
+            System.out.println(randomNumber);
+
+            if (i == 0) {
+                threads.add(new Thread(new QueryOne(null, null, getDBConnection(), true, this.id, 0)));
+            } else {
+                QueryServiceGrpc.QueryServiceBlockingStub syncClient = QueryServiceGrpc.newBlockingStub(this.messengers.get(i - 1));
+                //Create a protocol buffer message & send it
+                Query query = Query.newBuilder().setQuery("SELECT * FROM socialnetwork.tmptable WHERE serverID = X").build();
+                QueryRequest request = QueryRequest.newBuilder().setQuery(query).build();
+
+                threads.add(new Thread(new QueryOne(syncClient, request, null, false, this.id, 0)));
+            }
+
+        }
+
+        for (int i = 0; i < numOfNeighbors + 1; i++) {
+            threads.get(i).start();
+        }
+
+    }
+
+    public Connection getDBConnection() {
+        return this.connection;
     }
 }

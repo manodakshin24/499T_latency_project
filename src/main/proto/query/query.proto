@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package query;
+option java_package = "com.proto.query";
+option java_multiple_files = true;
+
+message Query {
+  string query = 1;
+}
+
+message QueryRequest {
+  Query query = 1;
+}
+
+message QueryResponse {
+  string result = 1;
+}
+
+service QueryService {
+  rpc Query(QueryRequest) returns (QueryResponse) {};
+}

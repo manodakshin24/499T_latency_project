@@ -4,9 +4,11 @@ import Client.ClientNode;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -26,80 +28,108 @@ public class Main {
             //throw new RuntimeException(e);
         }
         try {
-            con.createStatement().execute("CREATE TABLE socialnetwork.tmptable (userID INT PRIMARY KEY, serverID INT, name VARCHAR(255))");
+            con.createStatement().execute("CREATE TABLE socialnetwork.tmptable (userID INT PRIMARY KEY, serverID INT, name VARCHAR(255));");
             System.out.println("Creation Success");
         } catch (SQLException e) {
             System.out.println("Creation Failed");
             //throw new RuntimeException(e);
         }
         try {
-            con.createStatement().execute("INSERT INTO socialnetwork.tmptable VALUES (65, 1, 'Bob'), (66, 2, 'Charlie')");
+            con.createStatement().execute("INSERT INTO socialnetwork.tmptable VALUES (65, 1, 'Bob'), (66, 2, 'Charlie'), (67, 3, 'Duncan');");
             System.out.println("Insertion Success");
         } catch (SQLException e) {
             System.out.println("Insertion Failed");
             //throw new RuntimeException(e);
         }
-
-        ClientNode nodeOne = new ClientNode("jdbc:postgresql://localhost:26257/",
-                                            "socialnetwork?sslmode=disable",
-                                            "org.postgresql.Driver",
-                                            "anish",
-                                            "",
-                                            new ArrayList<>(Arrays.asList(50052, 50053)),
-                                            50051,
-                                            1);
-        ClientNode nodeTwo = new ClientNode("jdbc:postgresql://localhost:26257/",
-                                            "socialnetwork?sslmode=disable",
-                                            "org.postgresql.Driver",
-                                            "anish",
-                                            "",
-                                            new ArrayList<>(Arrays.asList(50051, 50053)),
-                                            50052,
-                                            2);
-
-        ClientNode nodeThree = new ClientNode("jdbc:postgresql://localhost:26257/",
-                                            "socialnetwork?sslmode=disable",
-                                            "org.postgresql.Driver",
-                                            "anish",
-                                            "",
-                                            new ArrayList<>(Arrays.asList(50051, 50052)),
-                                            50053,
-                                            3);
-
-        nodeOne.connectDB();
-        nodeTwo.connectDB();
-
-        nodeOne.startMessengers();
-        nodeTwo.startMessengers();
-        nodeThree.startMessengers();
-
         try {
-            nodeOne.startReceiver();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        try {
-            nodeTwo.startReceiver();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        try {
-            nodeThree.startReceiver();
-        } catch (IOException e) {
-            System.out.println(e);
+            ResultSet res = con.createStatement().executeQuery("SELECT * FROM socialnetwork.tmptable WHERE serverID = 3;");
+            while (res.next()) {
+                System.out.printf("\tStudent %s: %s\n", res.getInt("userId"), res.getString("name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Selection Failed");
+            //throw new RuntimeException(e);
         }
 
-        nodeOne.sendHelloMessages();
-        nodeTwo.sendHelloMessages();
-        nodeThree.sendHelloMessages();
+        HashMap<Integer, Integer> myMap = new HashMap<>();
+        myMap.put(50051, 1);
+        myMap.put(50052, 2);
+        myMap.put(50053, 3);
 
-        nodeOne.stopMessengers();
-        nodeTwo.stopMessengers();
-        nodeThree.stopMessengers();
+        System.out.println(myMap.get(50051));
+        System.out.println(myMap.get(50052));
+        System.out.println(myMap.get(50053));
 
-        nodeOne.stopReceiver();
-        nodeTwo.stopReceiver();
-        nodeThree.stopReceiver();
+
+//        ClientNode nodeOne = new ClientNode("jdbc:postgresql://localhost:26257/",
+//                                            "socialnetwork?sslmode=disable",
+//                                            "org.postgresql.Driver",
+//                                            "anish",
+//                                            "",
+//                                            new ArrayList<>(Arrays.asList(50052, 50053)),
+//                                            50051,
+//                                            1);
+//        ClientNode nodeTwo = new ClientNode("jdbc:postgresql://localhost:26257/",
+//                                            "socialnetwork?sslmode=disable",
+//                                            "org.postgresql.Driver",
+//                                            "anish",
+//                                            "",
+//                                            new ArrayList<>(Arrays.asList(50051, 50053)),
+//                                            50052,
+//                                            2);
+//
+//        ClientNode nodeThree = new ClientNode("jdbc:postgresql://localhost:26257/",
+//                                            "socialnetwork?sslmode=disable",
+//                                            "org.postgresql.Driver",
+//                                            "anish",
+//                                            "",
+//                                            new ArrayList<>(Arrays.asList(50051, 50052)),
+//                                            50053,
+//                                            3);
+//
+//        nodeOne.connectDB();
+//        nodeTwo.connectDB();
+//        nodeThree.connectDB();
+//
+//        nodeOne.startMessengers();
+//        nodeTwo.startMessengers();
+//        nodeThree.startMessengers();
+//
+//        try {
+//            nodeOne.startReceiver();
+//        } catch (IOException e) {
+//            System.out.println(e);
+//        }
+//        try {
+//            nodeTwo.startReceiver();
+//        } catch (IOException e) {
+//            System.out.println(e);
+//        }
+//        try {
+//            nodeThree.startReceiver();
+//        } catch (IOException e) {
+//            System.out.println(e);
+//        }
+//
+//        nodeOne.sendHelloMessages();
+//        nodeTwo.sendHelloMessages();
+//        nodeThree.sendHelloMessages();
+//
+//        nodeOne.executeQueryOne();
+//
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        nodeOne.stopMessengers();
+//        nodeTwo.stopMessengers();
+//        nodeThree.stopMessengers();
+//
+//        nodeOne.stopReceiver();
+//        nodeTwo.stopReceiver();
+//        nodeThree.stopReceiver();
 
 
 
