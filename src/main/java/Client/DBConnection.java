@@ -37,8 +37,8 @@ public class DBConnection {
     public Connection getConnection() {
 
         if (con == null) {
-            String url = this.url; //"jdbc:postgresql://127.0.0.1:26257/";
-            String dbName = this.db; //"school?sslmode=disable";
+            String url = this.url;
+            String dbName = this.db;
             String driver = this.driver;
             String userName = this.username;
             String password = this.password;

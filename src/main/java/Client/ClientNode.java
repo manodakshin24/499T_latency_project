@@ -149,6 +149,29 @@ public class ClientNode {
 
     }
 
+    public void executeQueryOneNew() {
+
+        int numOfNeighbors = this.messengers.size();
+
+        for (int i = 0; i < numOfNeighbors + 1; i++) {
+
+            if (i == 0) {
+                Thread newThread = new Thread(new QueryOne(null, null, getDBConnection(), true, this.id, 0));
+                newThread.start();
+            } else {
+                QueryServiceGrpc.QueryServiceBlockingStub syncClient = QueryServiceGrpc.newBlockingStub(this.messengers.get(i - 1));
+                //Create a protocol buffer message & send it
+                Query query = Query.newBuilder().setQuery("SELECT * FROM socialnetwork.tmptable WHERE serverID = X").build();
+                QueryRequest request = QueryRequest.newBuilder().setQuery(query).build();
+
+                Thread newThread = new Thread(new QueryOne(syncClient, request, null, false, this.id, 0));
+                newThread.start();
+            }
+
+        }
+
+    }
+
     public Connection getDBConnection() {
         return this.connection;
     }

@@ -47,20 +47,20 @@ public class Main {
                 System.out.printf("\tStudent %s: %s\n", res.getInt("userId"), res.getString("name"));
             }
         } catch (SQLException e) {
-            System.out.println("Selection Failed");
+            System.out.println("Selection Failed" + e);
             //throw new RuntimeException(e);
         }
-
-        HashMap<Integer, Integer> myMap = new HashMap<>();
-        myMap.put(50051, 1);
-        myMap.put(50052, 2);
-        myMap.put(50053, 3);
-
-        System.out.println(myMap.get(50051));
-        System.out.println(myMap.get(50052));
-        System.out.println(myMap.get(50053));
-
-
+//
+//        HashMap<Integer, Integer> myMap = new HashMap<>();
+//        myMap.put(50051, 1);
+//        myMap.put(50052, 2);
+//        myMap.put(50053, 3);
+//
+//        System.out.println(myMap.get(50051));
+//        System.out.println(myMap.get(50052));
+//        System.out.println(myMap.get(50053));
+//
+//
 //        ClientNode nodeOne = new ClientNode("jdbc:postgresql://localhost:26257/",
 //                                            "socialnetwork?sslmode=disable",
 //                                            "org.postgresql.Driver",
@@ -130,17 +130,63 @@ public class Main {
 //        nodeOne.stopReceiver();
 //        nodeTwo.stopReceiver();
 //        nodeThree.stopReceiver();
+//
+//
+//        myObj ex = new myObj("Anish");
+//        changeName(ex);
+//        System.out.println(ex.getName());
+//
+//        HashMap<Integer, myObj> myMap2 = new HashMap<>();
+//        myMap2.put(1, ex);
+//
+//        changeNameMap(myMap2);
+//        System.out.println(ex.getName());
+//
+//        ex = ex.getObj();
+//        System.out.println(ex.getName());
+//
+//
+//
+//
+//        // Press Ctrl+R or click the green arrow button in the gutter to run the code.
+//        for (int i = 1; i <= 5; i++) {
+//
+//            // Press Ctrl+D to start debugging your code. We have set one breakpoint
+//            // for you, but you can always add more by pressing Cmd+F8.
+//            System.out.println("i = " + i);
+//        }
+    }
+    public static void changeName(myObj obj) {
+        obj.setName("Anus");
+        changeName2(obj);
+    }
 
+    public static void changeNameMap(HashMap<Integer, myObj> map) {
+        map.get(1).setName("Anus2");
+        changeName2Map(map);
+    }
 
+    public static void changeName2(myObj obj) {
+        obj.setName("Anushy");
+    }
 
+    public static void changeName2Map(HashMap<Integer, myObj> map) {
+        map.get(1).setName("Anushy2");
+    }
 
-
-        // Press Ctrl+R or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
-
-            // Press Ctrl+D to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Cmd+F8.
-            System.out.println("i = " + i);
+    public static class myObj {
+        String name;
+        public myObj(String name) {
+            this.name = name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public String getName() {
+            return this.name;
+        }
+        public myObj getObj (){
+            return this;
         }
     }
 }
