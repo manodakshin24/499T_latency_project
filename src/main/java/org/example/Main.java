@@ -150,7 +150,7 @@ public class Main {
         nodeSix.executeQueryOne();
 //
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
