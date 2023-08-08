@@ -147,7 +147,7 @@ public class Main {
         }
 
 
-        nodeSix.executeQueryOne();
+        nodeOne.executeQueryOne();
 //
         try {
             Thread.sleep(5000);
