@@ -5,7 +5,7 @@ option java_package = "com.proto.query";
 option java_multiple_files = true;
 
 message Query {
-  string query = 1;
+  int32 query = 1;
 }
 
 message QueryRequest {

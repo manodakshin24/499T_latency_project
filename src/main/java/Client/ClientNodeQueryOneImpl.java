@@ -5,42 +5,36 @@ import com.proto.query.QueryRequest;
 import com.proto.query.QueryResponse;
 import com.proto.query.QueryServiceGrpc;
 import io.grpc.stub.StreamObserver;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClientNodeQueryOneImpl extends QueryServiceGrpc.QueryServiceImplBase {
-    private int id;
 
-    private Connection connection;
+    private ClientNode clientNode;
 
-    public ClientNodeQueryOneImpl(int id, Connection connection) {
-        this.id = id;
-        this.connection = connection;
+    Lock lock = new ReentrantLock();
+
+    public ClientNodeQueryOneImpl(ClientNode clientNode) {
+        this.clientNode = clientNode;
     }
 
     @Override
     public void query(QueryRequest request, StreamObserver<QueryResponse> responseObserver) {
+
         Query query = request.getQuery();
-        String queryStr = query.getQuery();
+        int prevClientNodeID = query.getQuery();
 
-        String modifiedQueryStr = queryStr.replace("serverID = X", "serverID = " + this.id);
-
-        try {
-            ResultSet resultSet = this.connection.createStatement().executeQuery(modifiedQueryStr);
-            while (resultSet.next()) {
-                System.out.printf("\tStudent %s: %s\n", resultSet.getInt("userId"), resultSet.getString("name"));
-            }
-        } catch (SQLException e) {
-            System.out.println("Selection Failed");
-            //throw new RuntimeException(e);
+        this.lock.lock();
+        if (this.clientNode.isVisited()) {
+            this.lock.unlock();
+            System.out.println("ClientNode " + this.clientNode.getId() + " already visited");
+        } else {
+            this.clientNode.setJustCameFromClientNodeId(prevClientNodeID);
+            this.clientNode.executeQueryOne();
+            this.lock.unlock();
         }
 
-        System.out.println("I Client Node " + this.id + " have ran the query: " + modifiedQueryStr);
-
-        String result = "I Client Node " + this.id + " have sucessfully finished!";
-        QueryResponse response = QueryResponse.newBuilder().setResult(result).build();
+        QueryResponse response = QueryResponse.newBuilder().setResult("Ping from ClientNode " + prevClientNodeID + " to ClientNode " + this.clientNode.getId() + " success!").build();
 
         //Send response
         responseObserver.onNext(response);
