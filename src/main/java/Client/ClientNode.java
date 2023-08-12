@@ -28,6 +28,12 @@ public class ClientNode {
     private boolean visited = false;
     private int justCameFromClientNodeId = -1;
 
+    private long start;
+
+    private long end;
+
+    private long total;
+
     public ClientNode(String url, String db, String driver, String username, String password, ClientNodeMap clientNodeMap, int receiverPort, int id) {
         this.url = url;
         this.db = db;
@@ -100,7 +106,9 @@ public class ClientNode {
         System.out.println("Client Node " + this.id + " stopped receiver");
     }
 
-    public void executeQueryOne() {
+    public void executeQueryOne() throws InterruptedException {
+
+        this.start = System.nanoTime();
 
         this.visited = true;
 
@@ -115,6 +123,12 @@ public class ClientNode {
         newThread.start();
 
         System.out.println("ClientNode " + this.id + " began execution!");
+
+        newThread.join();
+
+        this.end = System.nanoTime();
+
+        this.total = (this.end - this.start)/1000;
 
     }
 
@@ -131,4 +145,6 @@ public class ClientNode {
     }
 
     public void setJustCameFromClientNodeId(int id) { this.justCameFromClientNodeId = id; }
+
+    public long getTotalTime() { return this.total; }
 }

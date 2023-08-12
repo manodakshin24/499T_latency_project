@@ -30,7 +30,11 @@ public class ClientNodeQueryOneImpl extends QueryServiceGrpc.QueryServiceImplBas
             System.out.println("ClientNode " + this.clientNode.getId() + " already visited");
         } else {
             this.clientNode.setJustCameFromClientNodeId(prevClientNodeID);
-            this.clientNode.executeQueryOne();
+            try {
+                this.clientNode.executeQueryOne();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             this.lock.unlock();
         }
 
