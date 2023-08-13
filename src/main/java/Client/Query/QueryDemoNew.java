@@ -1,4 +1,4 @@
-package Client;
+package Client.Query;
 
 import com.proto.ping.NodeInfo;
 import com.proto.ping.PingRequest;

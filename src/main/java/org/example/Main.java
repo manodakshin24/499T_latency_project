@@ -1,7 +1,7 @@
 package org.example;
 
 import Client.ClientNode;
-import Client.ClientNodeMap;
+import Client.Utils.ClientNodeMap;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -69,31 +69,31 @@ public class Main {
                                             3);
 
         ClientNode nodeFour = new ClientNode("jdbc:postgresql://localhost:26257/",
-                "socialnetwork?sslmode=disable",
-                "org.postgresql.Driver",
-                "anish",
-                "",
-                clientNodeMap,
-                50054,
-                4);
+                                            "socialnetwork?sslmode=disable",
+                                            "org.postgresql.Driver",
+                                            "anish",
+                                            "",
+                                            clientNodeMap,
+                                            50054,
+                                            4);
 
         ClientNode nodeFive = new ClientNode("jdbc:postgresql://localhost:26257/",
-                "socialnetwork?sslmode=disable",
-                "org.postgresql.Driver",
-                "anish",
-                "",
-                clientNodeMap,
-                50055,
-                5);
+                                            "socialnetwork?sslmode=disable",
+                                            "org.postgresql.Driver",
+                                            "anish",
+                                            "",
+                                            clientNodeMap,
+                                            50055,
+                                            5);
 
         ClientNode nodeSix = new ClientNode("jdbc:postgresql://localhost:26257/",
-                "socialnetwork?sslmode=disable",
-                "org.postgresql.Driver",
-                "anish",
-                "",
-                clientNodeMap,
-                50056,
-                6);
+                                            "socialnetwork?sslmode=disable",
+                                            "org.postgresql.Driver",
+                                            "anish",
+                                            "",
+                                            clientNodeMap,
+                                            50056,
+                                            6);
 
         nodeOne.connectDB();
         nodeTwo.connectDB();

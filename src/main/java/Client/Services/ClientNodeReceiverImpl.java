@@ -1,4 +1,4 @@
-package Client;
+package Client.Services;
 
 import com.proto.hello.Hello;
 import com.proto.hello.HelloRequest;

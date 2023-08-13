@@ -1,12 +1,10 @@
 # Short Read Query Latency Benchmarking
 
 ## TODO:
-* Comment and lightly refactor some existing code
 * Implement Short Read [Query 3](http://ldbcouncil.org/ldbc_snb_docs/interactive-short-read-03.pdf)
 * Implement Short Read [Query 5](http://ldbcouncil.org/ldbc_snb_docs/interactive-short-read-05.pdf)
 * Implement Short Read [Query 6](http://ldbcouncil.org/ldbc_snb_docs/interactive-short-read-06.pdf)
 * Implement Short Read [Query 7](http://ldbcouncil.org/ldbc_snb_docs/interactive-short-read-07.pdf)
-* Implement a way to record the time it takes to execute the query
 * Setup LDBC SNB Database to connect to 
 * Dockerize and Deploy the ClientNode program 
 
