@@ -4,7 +4,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-
 import java.util.*;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,7 +17,6 @@ public class ClientNode {
     private String password;
     private int receiverPort;
     private Connection connection;
-    private boolean isConnected = false;
     private ArrayList<ManagedChannel> messengers = new ArrayList<>();
     private HashMap<Integer, ManagedChannel> idToMessenger = new HashMap<>();
     private Server receiver;
@@ -28,11 +26,11 @@ public class ClientNode {
     private boolean visited = false;
     private int justCameFromClientNodeId = -1;
 
-    private long start;
+    private long start = -1;
 
-    private long end;
+    private long end = -1;
 
-    private long total;
+    private long total = -1;
 
     public ClientNode(String url, String db, String driver, String username, String password, ClientNodeMap clientNodeMap, int receiverPort, int id) {
         this.url = url;
@@ -48,7 +46,6 @@ public class ClientNode {
     public void connectDB() throws RuntimeException {
         try {
             this.connection = DBConnection.getInstance().setConnectionParams(this.url, this.db, this.driver, this.username, this.password).getConnection();
-            this.isConnected = true;
             System.out.println("Client Node " + this.id + " is connect to DB!");
         } catch (RuntimeException e) {
             System.out.println(e);
@@ -85,7 +82,7 @@ public class ClientNode {
 
     public void startReceiver() throws IOException {
         this.receiver = ServerBuilder.forPort(this.receiverPort)
-                .addService(new ClientNodeQueryOneImpl(this))
+                .addService(new ClientNodeQueryDemoImpl(this))
                 .build();
         this.receiver.start();
         this.receiverRunning = true;
@@ -106,11 +103,13 @@ public class ClientNode {
         System.out.println("Client Node " + this.id + " stopped receiver");
     }
 
-    public void executeQueryOne() throws InterruptedException {
+    public void executeQueryOne(boolean isSourceNode) throws InterruptedException {
 
         this.start = System.nanoTime();
 
-        this.visited = true;
+        if (isSourceNode) {
+            this.visited = true;
+        }
 
         ArrayList<Integer> neighbors = this.map.getMap().get(this.id);
 
@@ -118,7 +117,7 @@ public class ClientNode {
             neighbors.remove(Integer.valueOf(this.justCameFromClientNodeId));
         }
 
-        Thread newThread = new Thread(new QueryOne(getDBConnection(), this.id, neighbors, getIdToMessenger(), 0));
+        Thread newThread = new Thread(new QueryDemoNew(getDBConnection(), this.id, neighbors, getIdToMessenger(), 1000));
 
         newThread.start();
 
@@ -136,7 +135,16 @@ public class ClientNode {
         return this.idToMessenger;
     }
 
-    public boolean isVisited() { return this.visited; }
+    public synchronized boolean isVisited() {
+        if (this.visited == true) {
+            this.end = System.nanoTime();
+            this.total = (this.end - this.start)/1000;
+            return true;
+        } else {
+            this.visited = true;
+            return false;
+        }
+    }
 
     public int getId() { return this.id; }
 
@@ -147,4 +155,10 @@ public class ClientNode {
     public void setJustCameFromClientNodeId(int id) { this.justCameFromClientNodeId = id; }
 
     public long getTotalTime() { return this.total; }
+    public void reset() {
+        this.start = -1;
+        this.end = -1;
+        this.total = -1;
+        this.visited = false;
+    }
 }

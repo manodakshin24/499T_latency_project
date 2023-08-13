@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package ping;
+option java_package = "com.proto.ping";
+option java_multiple_files = true;
+
+message NodeInfo {
+  int32 id = 1;
+}
+
+message PingRequest {
+  NodeInfo nodeInfo = 1;
+}
+
+message PingResponse {
+  string result = 1;
+}
+
+service PingService {
+  rpc PingQuery(PingRequest) returns (PingResponse) {};
+}
