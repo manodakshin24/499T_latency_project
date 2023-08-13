@@ -2,17 +2,12 @@ package org.example;
 
 import Client.ClientNode;
 import Client.ClientNodeMap;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    public static void main(String[] args) {
-        // Press Opt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
+    public static void main(String[] args) throws InterruptedException {
+
         System.out.println("Hello and welcome!");
 
         ArrayList<int[]> idPortPairs = new ArrayList<>();
@@ -23,16 +18,16 @@ public class Main {
         int[] pair4 = { 4, 50054 };
         int[] pair5 = { 5, 50055 };
         int[] pair6 = { 6, 50056 };
-//
+
         idPortPairs.add(pair1);
         idPortPairs.add(pair2);
         idPortPairs.add(pair3);
         idPortPairs.add(pair4);
         idPortPairs.add(pair5);
         idPortPairs.add(pair6);
-//
+
         ClientNodeMap clientNodeMap = new ClientNodeMap(idPortPairs);
-//
+
         clientNodeMap.addClientNodeConnection(1, 2);
         clientNodeMap.addClientNodeConnection(1, 3);
         clientNodeMap.addClientNodeConnection(1, 4);
@@ -45,8 +40,7 @@ public class Main {
         clientNodeMap.addClientNodeConnection(4, 1);
         clientNodeMap.addClientNodeConnection(5, 2);
         clientNodeMap.addClientNodeConnection(6, 3);
-//
-//
+
         ClientNode nodeOne = new ClientNode("jdbc:postgresql://localhost:26257/",
                                             "socialnetwork?sslmode=disable",
                                             "org.postgresql.Driver",
@@ -100,21 +94,21 @@ public class Main {
                 clientNodeMap,
                 50056,
                 6);
-//
+
         nodeOne.connectDB();
         nodeTwo.connectDB();
         nodeThree.connectDB();
         nodeFour.connectDB();
         nodeFive.connectDB();
         nodeSix.connectDB();
-//
+
         nodeOne.startMessengers();
         nodeTwo.startMessengers();
         nodeThree.startMessengers();
         nodeFour.startMessengers();
         nodeFive.startMessengers();
         nodeSix.startMessengers();
-//
+
         try {
             nodeOne.startReceiver();
         } catch (IOException e) {
@@ -146,22 +140,39 @@ public class Main {
             System.out.println(e);
         }
 
+        ArrayList<Long> times = new ArrayList<>();
 
-        nodeOne.executeQueryOne();
-//
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        for (int i = 0; i < 10; i++) {
+            nodeOne.executeQueryOne(true);
+            System.out.println("Total time: " + nodeOne.getTotalTime() + " microseconds");
+
+            times.add(nodeOne.getTotalTime());
+
+            nodeOne.reset();
+            nodeTwo.reset();
+            nodeThree.reset();
+            nodeFour.reset();
+            nodeFive.reset();
+            nodeSix.reset();
+
         }
-//
-//        nodeOne.stopMessengers();
-//        nodeTwo.stopMessengers();
-//        nodeThree.stopMessengers();
-//
-//        nodeOne.stopReceiver();
-//        nodeTwo.stopReceiver();
-//        nodeThree.stopReceiver();
+
+        System.out.println("Average time: " + calculateAverage(times) + " microseconds");
+
+    }
+
+    public static double calculateAverage(ArrayList<Long> numbers) {
+        int sum = 0;
+        for (Long num : numbers) {
+            sum += num;
+        }
+
+        // Avoid division by zero
+        if (numbers.size() == 0) {
+            return 0.0;
+        }
+
+        return (double) sum / numbers.size();
     }
 
 }
