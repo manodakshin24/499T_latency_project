@@ -9,7 +9,12 @@ import java.util.Enumeration;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Hello! I am a running Server stub");
+        String containerName = System.getenv("CONTAINER_NAME");
+        if (containerName == null) {
+            containerName = "Unknown";
+        }
+
+        System.out.println("Hello! I am a running "+containerName+" stub");
         String containerIpAddress = getContainerIpAddress();
         System.out.println("This server stub is running on IP: "+containerIpAddress);
         io.grpc.Server server = ServerBuilder.forPort(50051)

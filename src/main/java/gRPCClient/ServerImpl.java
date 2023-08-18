@@ -12,8 +12,14 @@ public class ServerImpl extends HelloServiceGrpc.HelloServiceImplBase {
         Hello hello = request.getHello();
         int clientID = hello.getClientID();
 
+        // Access the CONTAINER_NAME environment variable
+        String containerName = System.getenv("CONTAINER_NAME");
+        if (containerName == null) {
+            containerName = "Unknown";
+        }
+
         //Create Response
-        String result = "Hello Client "+clientID+"! I (Server 1) have acknowledged your message";
+        String result = "Hello Client "+clientID+"! I "+containerName+" have acknowledged your message";
         HelloResponse response = HelloResponse.newBuilder().setResult(result).build();
 
         //Send the response

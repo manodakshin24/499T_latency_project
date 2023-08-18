@@ -51,8 +51,16 @@ protobuf {
 }
 
 task execute(type: JavaExec) {
-    main = "gRPCClient.Main"
+    if (project.hasProperty("targetClass")) {
+        main = "gRPCClient.${targetClass}"
+    } else {
+        main = "gRPCClient.Main"
+    }
     classpath = sourceSets.main.runtimeClasspath
+
+    if (project.hasProperty("clientArgs")) {
+        args clientArgs.split(',')
+    }
 }
 
 test {
