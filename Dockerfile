@@ -24,12 +24,6 @@ RUN wget "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin
 
 RUN gradle build
 
-#COPY startup.sh /app/startup.sh
-
-#RUN chmod +x /app/startup.sh
-
-#CMD ["/app/startup.sh"]
-
 CMD ["gradle", "execute"]
 
 
