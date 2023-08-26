@@ -121,7 +121,7 @@ public class ClientNode {
             neighbors.remove(Integer.valueOf(this.justCameFromClientNodeId));
         }
 
-        Thread newThread = new Thread(new QueryDemoNew(getDBConnection(), this.id, neighbors, getIdToMessenger(), 1000));
+        Thread newThread = new Thread(new QueryDemoNew(getDBConnection(), this.id, neighbors, getIdToMessenger(), 0));
 
         newThread.start();
 

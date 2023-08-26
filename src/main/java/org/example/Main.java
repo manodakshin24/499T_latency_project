@@ -142,7 +142,7 @@ public class Main {
 
         ArrayList<Long> times = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             nodeOne.executeQueryOne(true);
             System.out.println("Total time: " + nodeOne.getTotalTime() + " microseconds");
 
@@ -161,18 +161,18 @@ public class Main {
 
     }
 
-    public static double calculateAverage(ArrayList<Long> numbers) {
-        int sum = 0;
+    public static long calculateAverage(ArrayList<Long> numbers) {
+        long sum = 0;
         for (Long num : numbers) {
             sum += num;
         }
 
         // Avoid division by zero
         if (numbers.size() == 0) {
-            return 0.0;
+            return 0;
         }
 
-        return (double) sum / numbers.size();
+        return sum / numbers.size();
     }
 
 }
