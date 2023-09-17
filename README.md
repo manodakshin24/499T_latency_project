@@ -92,7 +92,7 @@ clientNodeMap.addClientNodeConnection(1, 2);
     <img src="images/img2.jpeg" width="70%">
 </div>
 
-Where the Client/Messenger is a gRPC ```ManagedChannel``` instance and Server/Reciever is a gRPC ```Server``` instance.
+Where the ClientLocal/Messenger is a gRPC ```ManagedChannel``` instance and Server/Reciever is a gRPC ```Server``` instance.
 
 Naturally add the following statement creates a bidirectional relationship between the two nodes.
 

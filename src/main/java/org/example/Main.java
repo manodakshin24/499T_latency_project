@@ -1,7 +1,7 @@
 package org.example;
 
-import Client.ClientNode;
-import Client.Utils.ClientNodeMap;
+import ClientLocal.ClientNode;
+import ClientLocal.Utils.ClientNodeMap;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -142,7 +142,7 @@ public class Main {
 
         ArrayList<Long> times = new ArrayList<>();
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             nodeOne.executeQueryOne(true);
             System.out.println("Total time: " + nodeOne.getTotalTime() + " microseconds");
 

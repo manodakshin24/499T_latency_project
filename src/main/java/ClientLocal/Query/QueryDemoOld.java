@@ -1,4 +1,4 @@
-package Client.Query;
+package ClientLocal.Query;
 
 import com.proto.ping.NodeInfo;
 import com.proto.ping.PingRequest;

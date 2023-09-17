@@ -1,6 +1,6 @@
-package Client.Services;
+package ClientLocal.Services;
 
-import Client.ClientNode;
+import ClientLocal.ClientNode;
 import com.proto.ping.NodeInfo;
 import com.proto.ping.PingRequest;
 import com.proto.ping.PingResponse;

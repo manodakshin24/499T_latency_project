@@ -1,4 +1,4 @@
-package Client.Query;
+package ClientLocal.Query;
 
 import com.proto.ping.NodeInfo;
 import com.proto.ping.PingRequest;
@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class ShortReadQuery7 implements Runnable {
+public class ShortReadQuery3 implements Runnable {
     private Connection connection;
-    private String query = "SELECT friend FROM socialnetwork.knows WHERE person = 65 and serverID = X";
+    private String query = "SELECT * FROM socialnetwork.tmptable WHERE serverID = X";
     private int localId;
     private int sleepTime;
     private boolean beganBranching  = true;
@@ -24,7 +24,7 @@ public class ShortReadQuery7 implements Runnable {
     private ArrayList<Thread> threads = new ArrayList<>();
     private ExecutorService executor;
 
-    public ShortReadQuery7(Connection connection, int localId, ArrayList<Integer> neighbors, HashMap<Integer, ManagedChannel> idToChannel, int sleepTime) {
+    public ShortReadQuery3(Connection connection, int localId, ArrayList<Integer> neighbors, HashMap<Integer, ManagedChannel> idToChannel, int sleepTime) {
         this.localId = localId;
         this.sleepTime = sleepTime;
         this.connection = connection;
