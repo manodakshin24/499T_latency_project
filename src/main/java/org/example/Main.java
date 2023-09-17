@@ -142,7 +142,7 @@ public class Main {
 
         ArrayList<Long> times = new ArrayList<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             nodeOne.executeQueryOne(true);
             System.out.println("Total time: " + nodeOne.getTotalTime() + " microseconds");
 
