@@ -7,9 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-EXPOSE 50051
-
-COPY . /app
+COPY ../../../Downloads/IndStudySummer23-docker-cluster-setup /app
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends wget unzip && \
@@ -24,13 +22,6 @@ RUN wget "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin
 
 RUN gradle build
 
-CMD ["gradle", "execute"]
+ARG clientArgs
 
-
-
-
-
-
-
-
-
+CMD ["gradle", "execute", "--args=-PclientArgs=${clientArgs}"]

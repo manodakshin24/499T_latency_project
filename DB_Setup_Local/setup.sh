@@ -10,7 +10,7 @@ grep 'node starting' node1/logs/cockroach.log -A 11
 
 echo Running sql script...
 
-cockroach sql --insecure --host=localhost:26257 --file DB_Setup/setup.sql
+cockroach sql --insecure --host=localhost:26257 --file DB_Setup_Local/setup.sql
 
 echo Finished Setting Up Database, now connecting to SQL shell...
 
