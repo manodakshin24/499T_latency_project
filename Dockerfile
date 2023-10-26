@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY ../../../Downloads/IndStudySummer23-docker-cluster-setup /app
+COPY . /app
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends wget unzip && \

@@ -1,11 +1,12 @@
 package org.example;
 
-import ClientLocal.ClientNode;
-import ClientLocal.Utils.ClientNodeMap;
+import ClientDocker.ClientNode;
+import ClientDocker.Utils.ClientNodeMap;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DockerMain {
     public static void main(String[] args) throws InterruptedException {
@@ -13,11 +14,17 @@ public class DockerMain {
         System.out.println("Hello and Welcome!");
 
         String clientArgs = System.getenv("clientArgs");
+        String queryArgs = System.getenv("queryArgs");
+        String messageArgs = System.getenv("messageArgs");
+
+        System.out.println("ClientArgs: "+clientArgs+", queryArgs: "+queryArgs+", messageArgs: "+messageArgs);
 
         if(args.length < 1) {
             System.out.println("Usage: DockerMain <server-id>");
             return;
         }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the query number you want to run: ");
 
         ArrayList<int[]> idPortPairs = new ArrayList<>();
 
@@ -37,6 +44,7 @@ public class DockerMain {
 
         ClientNodeMap clientNodeMap = new ClientNodeMap(idPortPairs);
 
+        /*
         clientNodeMap.addClientNodeConnection(1, 2);
         clientNodeMap.addClientNodeConnection(1, 3);
         clientNodeMap.addClientNodeConnection(1, 4);
@@ -49,12 +57,27 @@ public class DockerMain {
         clientNodeMap.addClientNodeConnection(4, 1);
         clientNodeMap.addClientNodeConnection(5, 2);
         clientNodeMap.addClientNodeConnection(6, 3);
+        */
+
+        //New ClientNode Map assuming every node is connected to every node
+        //Creating a graph of 4 nodes
+        clientNodeMap.addClientNodeConnection(1, 2);
+        clientNodeMap.addClientNodeConnection(1, 3);
+        clientNodeMap.addClientNodeConnection(1, 4);
+        clientNodeMap.addClientNodeConnection(2, 3);
+        clientNodeMap.addClientNodeConnection(2, 4);
+        clientNodeMap.addClientNodeConnection(3, 4);
 
         System.out.println("Server ID printed below");
         int serverID = Integer.parseInt(clientArgs);
+        int queryID = Integer.parseInt(queryArgs);
+        int messageID = Integer.parseInt(messageArgs);
         System.out.println("server ID: "+serverID);
         int portNumber = clientNodeMap.getIdsToPorts().get(serverID);
-        int countDown = 120; // 120 seconds countdown
+        //Docker Change
+        int countDown = 30; // 120 seconds countdown
+        //Testing Change
+        //int countDown = 0;
 
         // Print the gRPC server address and port
         System.out.println("gRPC Server is starting on IP: " + getServerIpAddress() + " Port: " + portNumber);
@@ -88,8 +111,14 @@ public class DockerMain {
                 --countDown;
             }
             System.out.println("Beginning execution ....");
-            node.executeQueryOne(true);
-            System.out.println("Total time: " + node.getTotalTime() + " microseconds");
+            if(queryID == 5) {
+                node.executeQueryFive(true, queryID, messageID);
+                System.out.println("Total time: " + node.getTotalTime() + " microseconds");
+            }
+            else {
+                node.executeQueryOne(true);
+                System.out.println("Total time: " + node.getTotalTime() + " microseconds");
+            }
         }
         else {
             //Continue running to listen to gRPC requests

@@ -1,7 +1,9 @@
 package ClientDocker;
 
 import ClientDocker.Query.QueryDemoNew;
+import ClientDocker.Query.ShortReadQuery5;
 import ClientDocker.Services.ClientNodeQueryDemoImpl;
+import ClientDocker.Services.ShortReadQuery5Impl;
 import ClientDocker.Utils.ClientNodeMap;
 import ClientDocker.Utils.DBConnection;
 import io.grpc.ManagedChannel;
@@ -106,9 +108,17 @@ public class ClientNode {
     }
 
     public void startReceiver() throws IOException {
+        //Receiver for basic SELECT statement
+        /*
         this.receiver = ServerBuilder.forPort(this.receiverPort)
                 .addService(new ClientNodeQueryDemoImpl(this))
                 .build();
+        */
+        //Receiver for Query 5
+        this.receiver = ServerBuilder.forPort(this.receiverPort)
+                .addService(new ShortReadQuery5Impl(this))
+                .build();
+
         this.receiver.start();
         this.receiverRunning = true;
         System.out.println("Client Node " + this.id + " started receiver");
@@ -154,6 +164,32 @@ public class ClientNode {
 
         this.total = (this.end - this.start)/1000;
 
+    }
+
+    public void executeQueryFive(boolean isSourceNode, int queryID, int messageID) throws InterruptedException {
+        this.start = System.nanoTime();
+
+        if (isSourceNode) {
+            this.visited = true;
+        }
+
+        ArrayList<Integer> neighbors = this.map.getMap().get(this.id);
+
+        if (this.justCameFromClientNodeId != -1) {
+            neighbors.remove(Integer.valueOf(this.justCameFromClientNodeId));
+        }
+
+        Thread newThread = new Thread(new ShortReadQuery5(getDBConnection(), this.id, neighbors, getIdToMessenger(), 0, messageID));
+
+        newThread.start();
+
+        System.out.println("ClientNode " + this.id + " began execution!");
+
+        newThread.join();
+
+        this.end = System.nanoTime();
+
+        this.total = (this.end - this.start)/1000;
     }
 
     private String getContainerIpAddress(String containerName) {

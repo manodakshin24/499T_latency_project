@@ -6,8 +6,6 @@ CONTAINER_NAMES=(
   "server-2"
   "server-3"
   "server-4"
-  "server-5"
-  "server-6"
 )
 
 # Stop and remove containers
@@ -22,5 +20,13 @@ docker rmi nodeimage
 
 # Remove network
 docker network rm IndStudyNetwork
+
+# Connect to CockroachDB SQL shell, drop tables, and exit
+cockroach sql --insecure --host=localhost:26257 <<EOF
+USE socialnetwork;
+DROP TABLE IF EXISTS temp_message;
+DROP TABLE IF EXISTS temp_person;
+\q
+EOF
 
 echo "Shutdown and cleanup complete."
