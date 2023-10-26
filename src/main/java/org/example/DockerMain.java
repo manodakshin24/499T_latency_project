@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class DockerMain {
     public static void main(String[] args) throws InterruptedException {
@@ -23,8 +22,6 @@ public class DockerMain {
             System.out.println("Usage: DockerMain <server-id>");
             return;
         }
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the query number you want to run: ");
 
         ArrayList<int[]> idPortPairs = new ArrayList<>();
 
