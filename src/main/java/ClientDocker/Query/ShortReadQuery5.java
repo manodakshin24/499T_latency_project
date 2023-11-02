@@ -22,7 +22,9 @@ public class ShortReadQuery5 implements Runnable {
     private HashMap<Integer, ManagedChannel> idToChannel;
     private int sleepTime;
     private int messageID;
+    private int counter;
     private int queryID;
+    private int totalNodes = 4;
     private long creatorPersonID;
     private String firstName;
     private String lastName;
@@ -45,6 +47,7 @@ public class ShortReadQuery5 implements Runnable {
             "    LocationCountryId bigint NOT NULL,\n" +
             "    ParentMessageId bigint,\n" +
             "    serverId int NOT NULL, -- Add the \"serverId\" field of type INT\n" +
+            "    queryId int NOT NULL,\n" +
             "    INDEX (LocationCountryId),\n" +
             "    INDEX (CreatorPersonId),\n" +
             "    INDEX (ContainerForumId),\n" +
@@ -63,6 +66,7 @@ public class ShortReadQuery5 implements Runnable {
             "    speaks varchar(640) NOT NULL,\n" +
             "    email varchar(8192) NOT NULL,\n" +
             "    serverId int NOT NULL, -- Add the \"serverId\" field of type INT\n" +
+            "    queryId int NOT NULL,\n" +
             "    INDEX (LocationCityId)\n" +
             ")";
     //Query 5
@@ -96,7 +100,8 @@ public class ShortReadQuery5 implements Runnable {
                 //Create temp_message table
                 statement.execute(create_temp_message_table);
                 System.out.println("Temp message table created successfully");
-                this.queryID = 1;
+                this.queryID = this.totalNodes * this.counter + this.localId;
+                ++this.counter;
 
                 //If result not found, ping all other nodes
                 try {

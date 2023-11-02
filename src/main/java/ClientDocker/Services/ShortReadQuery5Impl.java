@@ -20,6 +20,7 @@ public class ShortReadQuery5Impl extends ShortReadQuery5ServiceGrpc.ShortReadQue
         String subquery = req.getSubQuery();
         int flagID = req.getFlag();
         String temp_table_name = req.getTempTableName();
+        int queryID = req.getQueryId();
         String return_message = "";
         try {
             Connection connection = clientNode.getDBConnection();
@@ -33,12 +34,15 @@ public class ShortReadQuery5Impl extends ShortReadQuery5ServiceGrpc.ShortReadQue
 
                 if(flagID == 1) {
                     //Add result query to temp_message table
-                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + temp_table_name + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + temp_table_name + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     int columnCount = resultSet.getMetaData().getColumnCount();
 
                     for(int i = 1; i <= columnCount; ++i) {
                         preparedStatement.setString(i, resultSet.getString(i));
                     }
+
+                    // Set queryId as the last parameter
+                    preparedStatement.setInt(columnCount + 1, queryID);
 
                     System.out.println("Insert message statement getting executed");
                     System.out.println(preparedStatement.toString());
@@ -53,12 +57,15 @@ public class ShortReadQuery5Impl extends ShortReadQuery5ServiceGrpc.ShortReadQue
                 }
                 if(flagID == 2) {
                     //Add person query to temp_person table
-                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + temp_table_name + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + temp_table_name + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     int columnCount = resultSet.getMetaData().getColumnCount();
 
                     for(int i = 1; i <= columnCount; ++i) {
                         preparedStatement.setString(i, resultSet.getString(i));
                     }
+
+                    // Set queryId as the last parameter
+                    preparedStatement.setInt(columnCount + 1, queryID);
 
                     System.out.println("Insert message statement getting executed");
                     System.out.println(preparedStatement.toString());
