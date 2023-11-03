@@ -194,3 +194,34 @@ To run the above experiment, follow these steps:
     ```
 
 These steps will help you run the Docker cluster setup experiment successfully.
+
+## Running the Query-5 Experiment
+
+To run the Query-5 experiment, follow these steps:
+
+1. **Clone the Repository:** Clone or pull the repository to your local machine.
+
+2. **Generate gRPC Files:** Run the `generateProto` task provided by Gradle to generate the necessary gRPC helper files.
+
+3. **Update the Database:** Run the database setup script in `DB_Setup_Docker/setup.sh` to prepare your database.
+
+4. **Make Start Script Executable:** Execute the following command to make the start script executable:
+
+   ```bash
+   chmod +x multi-container-start.sh
+
+5. **Start Docker Desktop:** Ensure that Docker Desktop is running on your system.
+
+6. **Initiate the Experiment:** Start the experiment by running the following command:
+
+   ```bash
+   ./multi-container-start.sh
+
+7. **Monitoring Progress:** The experiment will start running. You can monitor its progress by connecting to the logs of the "server-1" container. The experiment fetches output for messageId = 545, but you can modify this messageId in the docker-setup script. Make sure to use a messageId that exists in the database (refer to setup.sql to find a valid messageId).
+
+8. **Cleanup:** Once the experiment is completed, run the following command to clean up all the Docker containers and temporary tables created by Query 5:
+
+   ```bash
+   ./multi-container-shutdown.sh
+
+These steps will guide you through the process of running the experiment. Be sure to follow them in sequence for a successful execution.

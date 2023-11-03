@@ -50,19 +50,6 @@ protobuf {
     }
 }
 
-task execute(type: JavaExec) {
-    if (project.hasProperty("targetClass")) {
-        main = "gRPCClient.${targetClass}"
-    } else {
-        main = "gRPCClient.Main"
-    }
-    classpath = sourceSets.main.runtimeClasspath
-
-    if (project.hasProperty("clientArgs")) {
-        args clientArgs.split(',')
-    }
-}
-
 //The below code of gradle execute is for two-way-communication demo
 /*
 task execute(type: JavaExec) {
@@ -79,13 +66,13 @@ task execute(type: JavaExec) {
 }
 */
 
-//task execute(type: JavaExec) {
-//    main = "org.example.DockerMain"
-//    classpath = sourceSets.main.runtimeClasspath
-//    if(project.hasProperty("clientArgs")) {
-//        args clientArgs.split(',')
-//    }
-//}
+task execute(type: JavaExec) {
+    main = "org.example.DockerMain"
+    classpath = sourceSets.main.runtimeClasspath
+    if(project.hasProperty("clientArgs")) {
+        args clientArgs.split(',')
+    }
+}
 
 test {
     useJUnitPlatform()
