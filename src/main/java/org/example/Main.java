@@ -144,7 +144,7 @@ public class Main {
 
         for (int i = 0; i < 10; i++) {
             nodeOne.executeQueryOne(true);
-            System.out.println("Total time: " + nodeOne.getTotalTime() + " microseconds");
+            System.out.println("Total time main: " + nodeOne.getTotalTime() + " microseconds");
 
             times.add(nodeOne.getTotalTime());
 

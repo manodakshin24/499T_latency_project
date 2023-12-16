@@ -14,9 +14,12 @@ grep 'node starting' node1/logs/cockroach.log -A 11
 
 echo Running sql script...
 
-cockroach sql --insecure --host=localhost:26257 --file DB_Setup_Docker/setup.sql
+#cockroach sql --insecure --host=localhost:26257 --file DB_Setup_Docker/setup.sql
+cockroach sql --insecure --host=localhost:26257 < setup.sql
+##cockroach sql --database=socialnetwork < DB_Setup_Docker/setup.sql
+
+##--database=[your database] <
 
 echo Finished Setting Up Database, now connecting to SQL shell...
 
 cockroach sql --insecure --host=localhost:26257
-

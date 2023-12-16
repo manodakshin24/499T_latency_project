@@ -209,7 +209,7 @@ To run the Query-5 experiment, follow these steps:
 
    ```bash
    chmod +x multi-container-start.sh
-
+gradle 
 5. **Start Docker Desktop:** Ensure that Docker Desktop is running on your system.
 
 6. **Initiate the Experiment:** Start the experiment by running the following command:

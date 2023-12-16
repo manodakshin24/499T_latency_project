@@ -107,14 +107,14 @@ public class DockerMain {
                 Thread.sleep(1000);
                 --countDown;
             }
-            System.out.println("Beginning execution ....");
+            System.out.println("Beginning execution ...." + System.currentTimeMillis());
             if(queryID == 5) {
                 node.executeQueryFive(true, queryID, messageID);
-                System.out.println("Total time: " + node.getTotalTime() + " microseconds");
+                System.out.println("Total times: " + node.getTotalTime() + " microseconds");
             }
             else {
                 node.executeQueryOne(true);
-                System.out.println("Total time: " + node.getTotalTime() + " microseconds");
+                System.out.println("Total times: " + node.getTotalTime() + " microseconds");
             }
         }
         else {
